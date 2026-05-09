@@ -31,7 +31,6 @@ android/capacitor-cordova-android-plugins/build/
 android/capacitor-android/build/
 android/capacitor-local-notifications/build/
 *.keystore
-!android/app/calendario.keystore
 
 # Test results
 test-results/

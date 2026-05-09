@@ -18,10 +18,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('calendario.keystore')
-            storePassword 'calendario2026'
-            keyAlias 'calendario'
-            keyPassword 'calendario2026'
+            storeFile file(project.findProperty('storeFile') ?: 'calendario.keystore')
+            storePassword project.findProperty('storePassword') ?: 'calendario2026'
+            keyAlias project.findProperty('keyAlias') ?: 'calendario'
+            keyPassword project.findProperty('keyPassword') ?: 'calendario2026'
         }
     }
     buildTypes {
