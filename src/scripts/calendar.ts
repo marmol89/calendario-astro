@@ -14,8 +14,22 @@ import {
 import { t as i18n, setLang, getLang, applyTranslations } from "./i18n";
 import type { Lang } from "./i18n";
 import { pullFromCloud, pushToCloud, ensureSession } from "./supabase";
-import { downloadICS } from "./ical";
+import { downloadICS, generateICS } from "./ical";
 import { LocalNotifications } from "@capacitor/local-notifications";
+import { Share } from "@capacitor/share";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+
+interface Tag {
+  id: number;
+  name: string;
+  color: string;
+}
+
+type ViewMode = "month" | "week" | "day";
+
+interface TaskDisplay extends Task {
+  displayDate: string;
+}
 
 // ── Helpers ────────────────────────────────────────────
 function isNativeApp(): boolean {
@@ -1074,7 +1088,24 @@ function checkNotifications(): void {
 
 // ── Export / Import ────────────────────────────────────
 function exportTasks(): void {
-  const blob = new Blob([JSON.stringify({ tasks, tags }, null, 2)], { type: "application/json" });
+  const json = JSON.stringify({ tasks, tags }, null, 2);
+  if (isNativeApp()) {
+    const fileName = `tareas_calendario_${new Date().toISOString().slice(0, 10)}.json`;
+    Filesystem.writeFile({
+      path: fileName,
+      data: json,
+      directory: Directory.Cache,
+    }).then((result) => {
+      Share.share({
+        title: "Calendario de Tareas",
+        text: "Backup de tareas",
+        url: result.uri,
+        dialogTitle: "Compartir backup",
+      });
+    });
+    return;
+  }
+  const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -1083,7 +1114,24 @@ function exportTasks(): void {
   URL.revokeObjectURL(url);
 }
 
-function exportICal(): void {
+async function exportICal(): Promise<void> {
+  const ics = generateICS(tasks);
+  if (isNativeApp()) {
+    const fileName = `calendario_${new Date().toISOString().slice(0, 10)}.ics`;
+    Filesystem.writeFile({
+      path: fileName,
+      data: ics,
+      directory: Directory.Cache,
+    }).then((result) => {
+      Share.share({
+        title: "Calendario iCal",
+        text: "Exportar a calendario",
+        url: result.uri,
+        dialogTitle: "Exportar iCal",
+      });
+    });
+    return;
+  }
   downloadICS(tasks);
 }
 

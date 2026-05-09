@@ -37,7 +37,7 @@ export async function ensureSession(): Promise<string | null> {
 
 // Listen for session changes and persist
 if (supabase) {
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((_event: any, session: any) => {
     if (session) {
       localStorage.setItem("supabase_session", JSON.stringify(session));
     } else {
