@@ -21,9 +21,7 @@ import '../styles/global.css';
     <title>Calendario de Tareas</title>
 </head>
 <body>
-    <div class="max-w-6xl mx-auto px-4 py-8">
-        <slot />
-    </div>
+    <slot />
     <script src="../scripts/calendar.ts"></script>
     <script is:inline>
       if ("serviceWorker" in navigator && location.hostname !== "localhost") {

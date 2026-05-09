@@ -822,40 +822,25 @@ function renderSidebar(ft: TaskDisplay[]): void {
     const ic = t.completed;
 
     const card = document.createElement("div");
-    card.className =
-      "p-4 rounded-xl border border-slate group relative hover:shadow-md transition-all cursor-pointer fade-in" +
-      (ic ? " completed-task" : "");
-    card.style.borderLeft = `4px solid ${tc}`;
+    card.className = "task-card" + (ic ? " completed" : "");
+    card.style.borderLeft = ""; // removed, using priority bar
     card.onclick = () => showTaskDetails(t.id);
 
-    // Delete button
-    const db = document.createElement("button");
-    db.className =
-      "absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-secondary hover:text-red-500 transition-all";
-    db.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>';
-    db.onclick = (e) => deleteTask(t.id, e);
-
-    // Toggle complete button
-    const cb = document.createElement("button");
-    cb.className =
-      "absolute top-2 right-8 opacity-0 group-hover:opacity-100 text-secondary hover:text-green-500 transition-all";
-    cb.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>';
-    cb.onclick = (e) => toggleTaskComplete(t.id, e);
+    // Priority bar
+    const pc = PRIORITY_COLORS[t.priority || "medium"] || "#f59e0b";
+    const priorityBar = document.createElement("div");
+    priorityBar.className = "task-priority";
+    priorityBar.style.backgroundColor = pc;
+    card.appendChild(priorityBar);
 
     const repeatIcon =
       t.repeatType && t.repeatType !== "none" ? ' <span class="repeat-icon">\u21BB</span>' : "";
     const searchTerm = getSearchTerm();
-    const pc = PRIORITY_COLORS[t.priority || "medium"] || "#f59e0b";
     const plabel = t.priority === "high" ? "!!" : t.priority === "low" ? "▾" : "";
-    card.innerHTML =
-      `<div class="text-xs font-bold uppercase mb-1" style="color:${tc};">${df}${t.time ? " " + escapeHtml(t.time) : ""}${repeatIcon} | ${escapeHtml(tn)}</div>` +
-      `<div class="font-semibold text-primary text-sm mb-1${ic ? " task-title" : ""}">` +
-      `${plabel ? `<span class="priority-badge" style="background:${pc};color:#fff;">${plabel}</span> ` : ""}${highlightText(t.title, searchTerm)}</div>` +
-      `<div class="text-xs text-secondary leading-relaxed line-clamp-2">${t.description ? highlightText(t.description, searchTerm) : i18n("value.noDesc")}</div>`;
-    card.appendChild(cb);
-    card.appendChild(db);
+    card.innerHTML +=
+      `<div class="task-meta" style="color:${tc}">${df}${t.time ? " " + escapeHtml(t.time) : ""}${repeatIcon} · ${escapeHtml(tn)}</div>` +
+      `<div class="task-title${ic ? " completed-task" : ""}">` +
+      `${plabel ? `<span class="priority-badge" style="background:${pc};color:#fff;">${plabel}</span> ` : ""}${highlightText(t.title, searchTerm)}</div>`;
     $("monthTasksList").appendChild(card);
   });
 }
