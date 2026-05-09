@@ -51,17 +51,15 @@ jobs:
           chmod +x gradlew
           ./gradlew bundleRelease
         working-directory: android
-        env:
-          ORG_GRADLE_PROJECT_storeFile: calendario.keystore
-          ORG_GRADLE_PROJECT_storePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ORG_GRADLE_PROJECT_keyAlias: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ORG_GRADLE_PROJECT_keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+      - name: Debug - find AAB
+        run: find android -name "*.aab" -type f
 
       - name: Upload to Google Play Internal Testing
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
           packageName: com.calendario.tareas
-          releaseFiles: android/app/build/outputs/bundle/release/calendario-release.aab
+          releaseFiles: android/app/build/outputs/bundle/release/*.aab
           track: internal
           status: completed
