@@ -78,6 +78,7 @@
   background: var(--bg-card); border-top: 1px solid var(--border-color);
   border-radius: 16px 16px 0 0; max-height: 40vh; overflow-y: auto;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+  margin-top: 16px;
 }
 .task-panel-header {
   display: flex; justify-content: space-between; align-items: center;

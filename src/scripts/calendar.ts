@@ -1385,6 +1385,28 @@ function init(): void {
   // Apply translations to static HTML
   applyTranslations();
 
+  // Task panel drag to resize
+  const taskPanel = $("taskPanel");
+  let panelDragging = false;
+  let panelStartY = 0;
+  let panelStartHeight = 0;
+  taskPanel.addEventListener("touchstart", (e: TouchEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest(".task-panel-handle") || target.closest(".task-panel-header")) {
+      panelDragging = true;
+      panelStartY = e.touches[0].clientY;
+      panelStartHeight = taskPanel.offsetHeight;
+      e.preventDefault();
+    }
+  }, { passive: false });
+  document.addEventListener("touchmove", (e: TouchEvent) => {
+    if (!panelDragging) return;
+    const dy = panelStartY - e.touches[0].clientY;
+    const newH = Math.max(120, Math.min(window.innerHeight * 0.7, panelStartHeight + dy));
+    taskPanel.style.maxHeight = newH + "px";
+  });
+  document.addEventListener("touchend", () => { panelDragging = false; });
+
   // Sync icon initial state
   updateSyncIcon();
 
