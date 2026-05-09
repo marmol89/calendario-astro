@@ -4,7 +4,9 @@ import type { Task, Tag } from "./utils";
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || "";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = (supabaseUrl && supabaseAnonKey)
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null as any;
 
 const isConfigured = (): boolean => !!(supabaseUrl && supabaseAnonKey);
 
@@ -34,13 +36,15 @@ export async function ensureSession(): Promise<string | null> {
 }
 
 // Listen for session changes and persist
-supabase.auth.onAuthStateChange((_event, session) => {
-  if (session) {
-    localStorage.setItem("supabase_session", JSON.stringify(session));
-  } else {
-    localStorage.removeItem("supabase_session");
-  }
-});
+if (supabase) {
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session) {
+      localStorage.setItem("supabase_session", JSON.stringify(session));
+    } else {
+      localStorage.removeItem("supabase_session");
+    }
+  });
+}
 
 // ── Sync: Pull from cloud ──────────────────────────────
 export async function pullFromCloud(userId: string): Promise<{
