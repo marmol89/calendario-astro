@@ -238,6 +238,35 @@
 .slide-in-left { animation: slideInLeft 0.2s ease-out; }
 .fade-in { animation: fadeIn 0.25s ease-out; }
 
+/* ── Empty state ─────────────────────────────────────── */
+.empty-state {
+  text-align: center; padding: 32px 16px; color: var(--text-secondary);
+}
+.empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.3; }
+.empty-state p { font-size: 13px; margin: 0; }
+
+/* ── Week horizontal scroll ──────────────────────────── */
+.week-horizontal {
+  display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+  gap: 8px; padding: 8px 12px; scrollbar-width: none;
+}
+.week-horizontal::-webkit-scrollbar { display: none; }
+.week-day-card {
+  min-width: 140px; flex-shrink: 0; scroll-snap-align: start;
+  background: var(--bg-card); border: 1px solid var(--border-color);
+  border-radius: 12px; padding: 10px;
+}
+.week-day-card.today { border-color: var(--accent); background: var(--accent-light); }
+.week-day-header {
+  font-size: 11px; color: var(--text-secondary); font-weight: 500;
+  margin-bottom: 6px;
+}
+.week-day-card.today .week-day-header { color: var(--accent); font-weight: 700; }
+.week-day-num {
+  font-size: 22px; font-weight: 700; color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
 /* ── Desktop overrides ───────────────────────────────── */
 @media (min-width: 768px) {
   .day-cell { min-height: 90px; padding: 6px; }

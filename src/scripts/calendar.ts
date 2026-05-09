@@ -588,7 +588,15 @@ function renderCalendarCell(
     nl.className = "font-semibold text-primary block mb-1";
     nl.textContent = String(day);
     el.appendChild(nl);
-    el.onclick = () => showDayDetails(ds);
+    el.onclick = () => {
+      const tasksOnDay = getTasksForDate(ds);
+      if (tasksOnDay.length === 0) {
+        // Quick add: open modal with date pre-filled
+        openModal(undefined, ds);
+      } else {
+        showDayDetails(ds);
+      }
+    };
     el.addEventListener("dragover", handleDragOver);
     el.addEventListener("dragleave", handleDragLeave);
     el.addEventListener("drop", function (e: DragEvent) {
@@ -809,7 +817,9 @@ function renderSidebar(ft: TaskDisplay[]): void {
 
   if (ft.length === 0) {
     $("monthTasksList").innerHTML =
-      `<p class="text-secondary text-sm italic">${i18n("sidebar.empty")}</p>`;
+      `<div class="empty-state">` +
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>` +
+      `<p>${i18n("sidebar.empty")}</p></div>`;
     return;
   }
 
@@ -823,30 +833,54 @@ function renderSidebar(ft: TaskDisplay[]): void {
 
     const card = document.createElement("div");
     card.className = "task-card" + (ic ? " completed" : "");
-    card.style.borderLeft = ""; // removed, using priority bar
     card.onclick = () => showTaskDetails(t.id);
 
-    // Priority bar
     const pc = PRIORITY_COLORS[t.priority || "medium"] || "#f59e0b";
-    const priorityBar = document.createElement("div");
-    priorityBar.className = "task-priority";
-    priorityBar.style.backgroundColor = pc;
-    card.appendChild(priorityBar);
-
     const repeatIcon =
       t.repeatType && t.repeatType !== "none" ? ' <span class="repeat-icon">\u21BB</span>' : "";
     const searchTerm = getSearchTerm();
     const plabel = t.priority === "high" ? "!!" : t.priority === "low" ? "▾" : "";
-    card.innerHTML +=
+
+    card.innerHTML =
+      `<div class="task-priority" style="background-color:${pc}"></div>` +
       `<div class="task-meta" style="color:${tc}">${df}${t.time ? " " + escapeHtml(t.time) : ""}${repeatIcon} · ${escapeHtml(tn)}</div>` +
       `<div class="task-title${ic ? " completed-task" : ""}">` +
       `${plabel ? `<span class="priority-badge" style="background:${pc};color:#fff;">${plabel}</span> ` : ""}${highlightText(t.title, searchTerm)}</div>`;
+
+    // Swipe actions
+    let startX = 0, moved = false;
+    card.addEventListener("touchstart", (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      moved = false;
+    }, { passive: true });
+    card.addEventListener("touchmove", (e: TouchEvent) => {
+      const dx = e.touches[0].clientX - startX;
+      if (Math.abs(dx) > 10) moved = true;
+      card.style.transform = `translateX(${Math.max(-80, Math.min(80, dx * 0.5))}px)`;
+    }, { passive: true });
+    card.addEventListener("touchend", (e: TouchEvent) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      card.style.transform = "";
+      if (!moved || Math.abs(dx) < 60) return;
+      if (dx > 0) {
+        // Swipe right → toggle complete
+        toggleTaskComplete(t.id, e);
+      } else {
+        // Swipe left → delete
+        if (confirm(i18n("alert.deleteTask"))) {
+          deletedTaskIds.push(t.id);
+          tasks = tasks.filter((x) => x.id !== t.id);
+          saveAllWithUndo();
+        }
+      }
+    });
+
     $("monthTasksList").appendChild(card);
   });
 }
 
 // ── Modals ─────────────────────────────────────────────
-function openModal(taskId?: number): void {
+function openModal(taskId?: number, prefillDate?: string): void {
   editingTaskId = taskId || null;
   if (taskId) {
     const task = tasks.find((t) => t.id === taskId);
@@ -857,6 +891,7 @@ function openModal(taskId?: number): void {
       ($("taskTime") as HTMLInputElement).value = task.time || "";
       ($("taskDesc") as HTMLTextAreaElement).value = task.description || "";
       ($("taskRepeat") as HTMLSelectElement).value = task.repeatType || "none";
+      ($("taskPriority") as HTMLSelectElement).value = task.priority || "medium";
       ($("taskCompleted") as HTMLInputElement).checked = task.completed || false;
       setSelectedTag(task.tagId || (tags.length > 0 ? tags[0].id : null));
     }
@@ -864,9 +899,14 @@ function openModal(taskId?: number): void {
     $("modalTitle").textContent = "Añadir nueva tarea";
     ($("taskForm") as HTMLFormElement).reset();
     ($("taskRepeat") as HTMLSelectElement).value = "none";
+    ($("taskPriority") as HTMLSelectElement).value = "medium";
     ($("taskCompleted") as HTMLInputElement).checked = false;
     setSelectedTag(tags.length > 0 ? tags[0].id : null);
-    ($("taskDate") as HTMLInputElement).valueAsDate = new Date();
+    if (prefillDate) {
+      ($("taskDate") as HTMLInputElement).value = prefillDate;
+    } else {
+      ($("taskDate") as HTMLInputElement).valueAsDate = new Date();
+    }
   }
   $("taskModal").classList.remove("hidden");
   setTimeout(() => $("taskModalContent").classList.add("modal-active"), 10);
