@@ -2,7 +2,7 @@
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
       <div class="flex items-center gap-3 mb-1">
-        <img src="/calendario-astro/logo.svg" alt="Calendario" class="h-8 w-8" />
+        <img src={`${import.meta.env.BASE_URL}logo.svg`} alt="Calendario" class="h-8 w-8" />
         <h1 id="monthDisplay" class="text-3xl font-bold text-primary" data-i18n="">Mes Año</h1>
       </div>
       <p class="text-secondary text-sm" data-i18n="app.subtitle">Gestiona tus actividades diarias</p>
