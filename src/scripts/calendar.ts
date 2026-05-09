@@ -33,7 +33,7 @@ interface TaskDisplay extends Task {
 
 // ── Helpers ────────────────────────────────────────────
 function isNativeApp(): boolean {
-  return !!(window as any).Capacitor?.isNative?.();
+  return !!(window as any).Capacitor;
 }
 function getLocale(): string {
   return getLang() === "en" ? "en-US" : "es-ES";
@@ -1095,13 +1095,21 @@ function exportTasks(): void {
       path: fileName,
       data: json,
       directory: Directory.Cache,
-    }).then((result) => {
+    }).then(() => {
+      return Filesystem.getUri({
+        directory: Directory.Cache,
+        path: fileName,
+      });
+    }).then((uriResult) => {
       Share.share({
         title: "Calendario de Tareas",
         text: "Backup de tareas",
-        url: result.uri,
+        url: uriResult.uri,
         dialogTitle: "Compartir backup",
       });
+    }).catch((err) => {
+      console.error("[Export] Error:", err);
+      alert("Error al exportar: " + (err.message || ""));
     });
     return;
   }
@@ -1118,18 +1126,26 @@ async function exportICal(): Promise<void> {
   const ics = generateICS(tasks);
   if (isNativeApp()) {
     const fileName = `calendario_${new Date().toISOString().slice(0, 10)}.ics`;
-    Filesystem.writeFile({
-      path: fileName,
-      data: ics,
-      directory: Directory.Cache,
-    }).then((result) => {
-      Share.share({
+    try {
+      await Filesystem.writeFile({
+        path: fileName,
+        data: ics,
+        directory: Directory.Cache,
+      });
+      const uriResult = await Filesystem.getUri({
+        directory: Directory.Cache,
+        path: fileName,
+      });
+      await Share.share({
         title: "Calendario iCal",
         text: "Exportar a calendario",
-        url: result.uri,
+        url: uriResult.uri,
         dialogTitle: "Exportar iCal",
       });
-    });
+    } catch (err: any) {
+      console.error("[Export iCal] Error:", err);
+      alert("Error al exportar iCal: " + (err.message || ""));
+    }
     return;
   }
   downloadICS(tasks);
