@@ -47,7 +47,9 @@ jobs:
         run: npx cap sync
 
       - name: Build Android AAB
-        run: ./gradlew bundleRelease
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease
         working-directory: android
         env:
           ORG_GRADLE_PROJECT_storeFile: calendario.keystore
