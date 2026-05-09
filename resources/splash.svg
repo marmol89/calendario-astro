@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#6366f1"/>
+  <g transform="translate(232, 180) scale(1.2)">
+    <rect x="6" y="10" width="36" height="34" rx="4" fill="white" stroke="#818cf8" stroke-width="2.5"/>
+    <rect x="6" y="10" width="36" height="10" rx="4" fill="#6366f1"/>
+    <rect x="6" y="16" width="36" height="4" fill="#6366f1"/>
+    <circle cx="14" cy="6" r="2.5" fill="#a5b4fc"/>
+    <circle cx="34" cy="6" r="2.5" fill="#a5b4fc"/>
+    <path d="M18 29l4 4 8-10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="12" y1="34" x2="18" y2="34" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="12" y1="38" x2="22" y2="38" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="26" y1="34" x2="30" y2="34" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="32" y1="34" x2="36" y2="34" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  <text x="256" y="340" text-anchor="middle" fill="white" font-family="Inter, sans-serif" font-size="24" font-weight="600">Calendario</text>
+</svg>

@@ -1,43 +1,51 @@
-# Astro Starter Kit: Minimal
+# Calendario de Tareas
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Aplicación web de calendario y gestión de tareas construida con [Astro](https://astro.build) y [Tailwind CSS](https://tailwindcss.com).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Características
 
-## 🚀 Project Structure
+- 📅 Vistas de mes, semana y día con navegación por teclado
+- 🏷️ Sistema de etiquetas con colores personalizables
+- 🔄 Tareas recurrentes (diarias, semanales, mensuales)
+- 🔍 Búsqueda y filtro de tareas completadas
+- 🌙 Modo oscuro
+- 📤 Exportación e importación de tareas (JSON)
+- 🔔 Notificaciones del navegador para recordatorios
+- 🖱️ Drag & drop para reorganizar tareas entre días
+- 💾 Persistencia en localStorage
 
-Inside of your Astro project, you'll see the following folders and files:
+## Estructura del proyecto
 
 ```text
 /
 ├── public/
+│   └── favicon.svg           # Icono del sitio
 ├── src/
-│   └── pages/
-│       └── index.astro
+│   ├── components/           # Componentes Astro
+│   │   ├── CalendarPanel.astro
+│   │   ├── Header.astro
+│   │   ├── Modals.astro
+│   │   └── Sidebar.astro
+│   ├── layouts/
+│   │   └── Layout.astro      # Layout principal con meta tags y SEO
+│   ├── pages/
+│   │   └── index.astro       # Página principal
+│   ├── scripts/
+│   │   └── calendar.ts       # Lógica de la aplicación en TypeScript
+│   └── styles/
+│       └── global.css        # Estilos globales, variables CSS, dark mode
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Comandos
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Comando           | Acción                                      |
+| :---------------- | :------------------------------------------ |
+| `npm install`     | Instala dependencias                        |
+| `npm run dev`     | Inicia servidor de desarrollo en `localhost:4321` |
+| `npm run build`   | Construye el sitio para producción          |
+| `npm run preview` | Previsualiza la build local                 |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Requisitos
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Node.js >= 22.12.0

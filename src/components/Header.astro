@@ -1,0 +1,78 @@
+<header class="flex flex-col gap-4 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <div class="flex items-center gap-3 mb-1">
+        <img src="/logo.svg" alt="Calendario" class="h-8 w-8" />
+        <h1 id="monthDisplay" class="text-3xl font-bold text-primary" data-i18n="">Mes Año</h1>
+      </div>
+      <p class="text-secondary text-sm" data-i18n="app.subtitle">Gestiona tus actividades diarias</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center bg-card border border-slate rounded-lg overflow-hidden" role="tablist" aria-label="Vista del calendario">
+        <button id="btnMonthView" onclick="setView('month')" role="tab" aria-selected="true" class="px-3 py-1.5 text-xs font-medium bg-indigo-600 text-white transition-all" data-i18n="view.month">Mes</button>
+        <button id="btnWeekView" onclick="setView('week')" role="tab" aria-selected="false" class="px-3 py-1.5 text-xs font-medium text-secondary hover:bg-subtle transition-all" data-i18n="view.week">Semana</button>
+        <button id="btnDayView" onclick="setView('day')" role="tab" aria-selected="false" class="px-3 py-1.5 text-xs font-medium text-secondary hover:bg-subtle transition-all" data-i18n="view.day">Día</button>
+      </div>
+      <button onclick="changeView(-1)" data-i18n-aria="nav.previous" class="p-2 bg-card rounded-full shadow-sm border border-slate transition-all hover:bg-subtle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button onclick="resetToToday()" class="px-4 py-2 text-sm font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all" data-i18n="nav.today">Hoy</button>
+      <button onclick="changeView(1)" data-i18n-aria="nav.next" class="p-2 bg-card rounded-full shadow-sm border border-slate transition-all hover:bg-subtle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <button id="darkModeToggle" onclick="toggleDarkMode()" data-i18n-aria="nav.darkMode" class="p-2 bg-card rounded-full shadow-sm border border-slate transition-all hover:bg-subtle ml-2">
+        <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+      <span class="flex items-center gap-1 px-2 py-1 text-xs text-secondary" title="Sync status">
+        <svg id="syncIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color:#94a3b8"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+        <span id="syncStatusText" class="hidden sm:inline">Offline</span>
+      </span>
+      <button onclick="openModal()" data-i18n-aria="btn.newTask.label" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all shadow-md flex items-center gap-2 ml-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        <span data-i18n="btn.newTask">Nueva Tarea</span>
+      </button>
+    </div>
+  </div>
+  <div class="flex flex-col md:flex-row gap-3 items-center">
+    <div class="relative flex-1 w-full md:w-64">
+      <input type="text" id="searchInput" oninput="debouncedRender()" data-i18n-placeholder="search.placeholder" data-i18n-aria="search.label" class="w-full px-4 py-2 pl-10 border border-slate rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all bg-card text-primary text-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-secondary absolute left-3 top-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </div>
+    <div class="flex gap-2">
+      <button id="btnNotify" onclick="toggleNotifications()" data-i18n-aria="btn.notify.label" class="hide-xs px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span data-i18n="btn.notify">Notificar</span>
+      </button>
+      <button id="btnFilterCompleted" onclick="toggleShowCompleted()" data-i18n-aria="btn.showCompleted.label" class="hide-xs px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        <span data-i18n="btn.showCompleted">Mostrar completadas</span>
+      </button>
+      <button onclick="openTagManager()" data-i18n-aria="btn.tags.label" class="px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+        <span data-i18n="btn.tags">Etiquetas</span>
+      </button>
+      <button onclick="exportTasks()" data-i18n-aria="btn.export.label" class="px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+        <span data-i18n="btn.export">Exportar</span>
+      </button>
+      <button onclick="exportICal()" data-i18n-aria="btn.ical.label" class="hide-xs px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span data-i18n="btn.ical">iCal</span>
+      </button>
+      <button onclick="document.getElementById('importFile').click()" data-i18n-aria="btn.import.label" class="px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5 5 5M12 3v12"/></svg>
+        <span data-i18n="btn.import">Importar</span>
+      </button>
+      <button onclick="showShortcutsModal()" data-i18n-aria="btn.shortcuts.label" class="px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span data-i18n="btn.shortcuts">Atajos</span>
+      </button>
+      <button id="btnLangToggle" data-i18n-aria="btn.lang.label" class="px-3 py-2 text-xs font-medium text-secondary bg-card border border-slate rounded-lg hover:bg-subtle transition-all flex items-center gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+        EN/ES
+      </button>
+      <input type="file" id="importFile" accept=".json" class="hidden" />
+    </div>
+  </div>
+</header>

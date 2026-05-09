@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <main class="max-w-2xl mx-auto py-12">
+    <h1 class="text-3xl font-bold text-primary mb-6">Política de Privacidad</h1>
+    <p class="text-sm text-secondary mb-4">Última actualización: Mayo 2026</p>
+
+    <section class="space-y-6 text-secondary leading-relaxed">
+      <p>Esta aplicación <strong>Calendario de Tareas</strong> no recopila, almacena ni comparte ningún dato personal de sus usuarios.</p>
+
+      <h2 class="text-xl font-semibold text-primary mt-8 mb-3">Datos que almacenamos</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><strong>Tareas y etiquetas:</strong> se guardan exclusivamente en el dispositivo del usuario (localStorage) y, opcionalmente, en Supabase vinculadas a una sesión anónima sin información personal.</li>
+        <li><strong>Preferencias:</strong> idioma, modo oscuro y configuración de vista se almacenan en el dispositivo.</li>
+      </ul>
+
+      <h2 class="text-xl font-semibold text-primary mt-8 mb-3">Datos que NO recopilamos</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>Nombre, email o cualquier dato de identificación personal</li>
+        <li>Ubicación geográfica</li>
+        <li>Contactos, fotos o archivos del dispositivo</li>
+        <li>Datos de uso o analíticas</li>
+      </ul>
+
+      <h2 class="text-xl font-semibold text-primary mt-8 mb-3">Sincronización en la nube</h2>
+      <p>Si el usuario configura la sincronización con Supabase, los datos de tareas y etiquetas se transmiten de forma segura (HTTPS) y se asocian a una sesión anónima. Supabase no recibe información personal identificable.</p>
+
+      <h2 class="text-xl font-semibold text-primary mt-8 mb-3">Permisos del dispositivo</h2>
+      <p>La aplicación solicita permiso para enviar notificaciones locales con el único fin de recordar tareas programadas. Este permiso es opcional y puede revocarse en cualquier momento desde los ajustes del dispositivo.</p>
+
+      <h2 class="text-xl font-semibold text-primary mt-8 mb-3">Contacto</h2>
+      <p>Para cualquier consulta sobre esta política: <a href="mailto:calendario@tareas.app" class="text-indigo-500 hover:underline">calendario@tareas.app</a></p>
+    </section>
+  </main>
+</Layout>

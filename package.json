@@ -9,9 +9,35 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "cap:init": "npx cap init Calendario com.calendario.tareas --web-dir dist",
+    "cap:add": "npx cap add android",
+    "cap:sync": "npx cap sync",
+    "cap:open": "npx cap open android",
+    "cap:build": "npm run build && npx cap sync",
+    "cap:gen": "npx capacitor-assets generate --iconBackgroundColor '#6366f1' --splashBackgroundColor '#6366f1'"
   },
   "dependencies": {
-    "astro": "^6.3.1"
+    "@capacitor/android": "^8.3.3",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.3.3",
+    "@capacitor/core": "^8.3.3",
+    "@capacitor/local-notifications": "^8.1.0",
+    "@supabase/supabase-js": "^2.105.4",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.3.1",
+    "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@playwright/test": "^1.59.1",
+    "@vitest/ui": "^4.1.5",
+    "jsdom": "^29.1.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   }
 }

@@ -12,7 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
 .env.production
@@ -22,3 +21,18 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Android
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/capacitor-cordova-android-plugins/build/
+android/capacitor-android/build/
+android/capacitor-local-notifications/build/
+*.keystore
+!android/app/calendario.keystore
+
+# Test results
+test-results/
+playwright-report/
