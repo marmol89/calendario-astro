@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  base: "/calendario-astro/",
+  base: process.env.CAPACITOR ? "/" : "/calendario-astro/",
   devToolbar: { enabled: false },
   vite: {
     plugins: [tailwindcss()]
