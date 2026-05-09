@@ -1,5 +1,6 @@
-const CACHE_NAME = "calendario-v1";
-const ASSETS = ["/", "/favicon.svg", "/manifest.json"];
+const CACHE_NAME = "calendario-v2";
+const BASE = self.location.pathname.replace(/sw\.js$/, "");
+const ASSETS = [BASE, BASE + "logo.svg", BASE + "manifest.json"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

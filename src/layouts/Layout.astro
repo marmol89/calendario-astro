@@ -26,10 +26,14 @@ import '../styles/global.css';
     </div>
     <script src="../scripts/calendar.ts"></script>
     <script is:inline>
-      // Only register service worker in production (not dev mode with Vite)
       if ("serviceWorker" in navigator && location.hostname !== "localhost") {
         const base = location.pathname.endsWith("/") ? location.pathname : location.pathname + "/";
-        navigator.serviceWorker.register(base + "sw.js");
+        // Unregister old service workers
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          regs.forEach(r => r.unregister());
+        }).finally(() => {
+          navigator.serviceWorker.register(base + "sw.js");
+        });
       }
     </script>
 </body>
