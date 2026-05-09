@@ -2,7 +2,7 @@
   "name": "Calendario de Tareas",
   "short_name": "Calendario",
   "description": "Organiza tus actividades diarias con etiquetas, repeticiones y recordatorios.",
-  "start_url": "/",
+  "start_url": "/calendario-astro/",
   "display": "standalone",
   "background_color": "#6366f1",
   "theme_color": "#6366f1",
