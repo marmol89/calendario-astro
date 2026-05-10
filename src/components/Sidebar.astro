@@ -1,8 +1,15 @@
-<div class="task-panel" id="taskPanel">
-  <div class="task-panel-handle"></div>
-  <div class="task-panel-header">
-    <h3 id="sidebarTitleText" data-i18n="sidebar.tasks">Tareas</h3>
-    <span class="task-panel-stats" id="sidebarStats"></span>
+<div class="task-panel" id="taskPanel" data-expanded="false">
+  <div class="task-panel-header" onclick="toggleTaskPanel()">
+    <div class="task-panel-handle"></div>
+    <div class="task-panel-title-row">
+      <h3 id="sidebarTitleText" data-i18n="sidebar.tasks">Tareas</h3>
+      <div class="task-panel-title-meta">
+        <span class="task-panel-stats" id="sidebarStats"></span>
+        <svg class="task-panel-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </div>
+    </div>
   </div>
-  <div id="monthTasksList" style="padding:0 0 8px"></div>
+  <div id="monthTasksList" class="task-panel-content"></div>
 </div>

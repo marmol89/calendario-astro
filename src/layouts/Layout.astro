@@ -24,6 +24,12 @@ import '../styles/global.css';
     <slot />
     <script src="../scripts/calendar.ts"></script>
     <script is:inline>
+      function toggleTaskPanel() {
+        var p = document.getElementById('taskPanel');
+        if (!p) return;
+        var expanded = p.getAttribute('data-expanded') === 'true';
+        p.setAttribute('data-expanded', expanded ? 'false' : 'true');
+      }
       if ("serviceWorker" in navigator && location.hostname !== "localhost") {
         const base = location.pathname.endsWith("/") ? location.pathname : location.pathname + "/";
         // Unregister old service workers
