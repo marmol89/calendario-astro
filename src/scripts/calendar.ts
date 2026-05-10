@@ -1173,7 +1173,12 @@ async function exportICal(): Promise<void> {
     }
     return;
   }
-  downloadICS(tasks);
+  try {
+    await downloadICS(tasks);
+  } catch (err: any) {
+    console.error("[Export iCal] Error:", err);
+    alert("Error al exportar iCal: " + (err.message || ""));
+  }
 }
 
 function importTasks(event: Event): void {

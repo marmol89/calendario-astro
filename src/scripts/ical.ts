@@ -44,19 +44,45 @@ export function generateICS(tasks: Array<{
   return lines.join("\r\n");
 }
 
-export function downloadICS(tasks: Array<{
+export async function downloadICS(tasks: Array<{
   title: string;
   date: string;
   time?: string;
   description?: string;
   repeatType?: string;
-}>): void {
+}>): Promise<void> {
   const ics = generateICS(tasks);
+  const fileName = "calendario_tareas.ics";
   const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+
+  // Try Web Share API first (works on mobile browsers + supports file sharing on iOS 14+)
+  if (navigator.share && navigator.canShare) {
+    const file = new File([blob], fileName, { type: "text/calendar" });
+    if (navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({
+          title: "Calendario iCal",
+          text: "Exportar a calendario",
+          files: [file],
+        });
+        return;
+      } catch {
+        // User cancelled or share failed — fall through to download
+      }
+    }
+  }
+
+  // Fallback: force download via anchor element
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "calendario_tareas.ics";
+  a.download = fileName;
+  a.style.display = "none";
+  document.body.appendChild(a);
   a.click();
-  URL.revokeObjectURL(url);
+  // Delay revocation to let the browser start the download
+  setTimeout(() => {
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }, 150);
 }
