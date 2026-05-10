@@ -14,7 +14,7 @@ import {
 import { t as i18n, setLang, getLang, applyTranslations } from "./i18n";
 import type { Lang } from "./i18n";
 import { pullFromCloud, pushToCloud, ensureSession } from "./supabase";
-import { downloadICS, generateICS } from "./ical";
+import { generateICS } from "./ical";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import { Share } from "@capacitor/share";
 import { Filesystem, Directory } from "@capacitor/filesystem";
@@ -1147,38 +1147,39 @@ function exportTasks(): void {
   URL.revokeObjectURL(url);
 }
 
-async function exportICal(): Promise<void> {
+function exportICal(): void {
   const ics = generateICS(tasks);
   if (isNativeApp()) {
     const fileName = `calendario_${new Date().toISOString().slice(0, 10)}.ics`;
-    try {
-      await Filesystem.writeFile({
-        path: fileName,
-        data: ics,
+    Filesystem.writeFile({
+      path: fileName,
+      data: ics,
+      directory: Directory.Cache,
+    }).then(() => {
+      return Filesystem.getUri({
         directory: Directory.Cache,
-      });
-      const uriResult = await Filesystem.getUri({
-        directory: Directory.Cache,
         path: fileName,
       });
-      await Share.share({
+    }).then((uriResult) => {
+      Share.share({
         title: "Calendario iCal",
         text: "Exportar a calendario",
         url: uriResult.uri,
         dialogTitle: "Exportar iCal",
       });
-    } catch (err: any) {
+    }).catch((err) => {
       console.error("[Export iCal] Error:", err);
       alert("Error al exportar iCal: " + (err.message || ""));
-    }
+    });
     return;
   }
-  try {
-    await downloadICS(tasks);
-  } catch (err: any) {
-    console.error("[Export iCal] Error:", err);
-    alert("Error al exportar iCal: " + (err.message || ""));
-  }
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "calendario_tareas.ics";
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function importTasks(event: Event): void {
