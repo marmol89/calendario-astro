@@ -17,7 +17,7 @@ import { pullFromCloud, pushToCloud, ensureSession } from "./supabase";
 import { generateICS } from "./ical";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import { Share } from "@capacitor/share";
-import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 
 interface Tag {
   id: number;
@@ -1120,6 +1120,7 @@ function exportTasks(): void {
       path: fileName,
       data: json,
       directory: Directory.Cache,
+      encoding: Encoding.UTF8,
     }).then(() => {
       return Filesystem.getUri({
         directory: Directory.Cache,
@@ -1155,6 +1156,7 @@ function exportICal(): void {
       path: fileName,
       data: ics,
       directory: Directory.Cache,
+      encoding: Encoding.UTF8,
     }).then(() => {
       return Filesystem.getUri({
         directory: Directory.Cache,
