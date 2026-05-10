@@ -64,3 +64,12 @@ jobs:
           releaseFiles: android/app/build/outputs/bundle/release/*.aab
           track: internal
           status: completed
+
+      - name: Upload to Google Play Closed Testing
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
+          packageName: com.calendario.tareas
+          releaseFiles: android/app/build/outputs/bundle/release/*.aab
+          track: closed
+          status: completed
