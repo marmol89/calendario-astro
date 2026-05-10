@@ -71,5 +71,5 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
           packageName: com.calendario.tareas
           releaseFiles: android/app/build/outputs/bundle/release/*.aab
-          track: closed
+          track: alpha
           status: completed
